@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Dict
+from typing import Dict
 import re
 
 def parse_whatsapp_chat(file_path: str) -> Dict:
@@ -7,6 +7,7 @@ def parse_whatsapp_chat(file_path: str) -> Dict:
     participants = set()
     dates = []
 
+    
     pattern = re.compile(r'(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2} (?:AM|PM)) - (.*?): (.*)')
 
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -14,6 +15,11 @@ def parse_whatsapp_chat(file_path: str) -> Dict:
             match = pattern.match(line)
             if match:
                 date_str, time_str, sender, message = match.groups()
+                
+                # Ignore system messages (like "joined" or "was added")[As otherwise this would add to the total or users metrics]
+                if message.strip().lower().endswith(("joined using this group's invite link", "was added")):
+                    continue
+
                 dt = datetime.strptime(f"{date_str} {time_str}", "%m/%d/%Y %I:%M %p")
                 dates.append(dt)
                 participants.add(sender)
