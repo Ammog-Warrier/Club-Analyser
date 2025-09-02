@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+venv/
+.env
+
+# Instaloader session
+session-*
+
+# IDE/editor files
+.vscode/
+*.swp
